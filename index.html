@@ -17,17 +17,17 @@
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
 	<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet-src.js"></script>
 	<script src="http://code.jquery.com/jquery-2.0.3.js"></script>
+	<script src="http://api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU" type="text/javascript"></script>
 </head>
 <body>
 	<div class="map"></div>
 
 	<script type="text/javascript">
 
-		L.yandexTileLayer
 
 		var map = L.map(document.querySelector(".map"));
 
-		map.setView([43.260535, 76.945493], 12);
+		map.setView([43.260535, 76.945493], 12); // almaty
 
 		$.getJSON('water.geojson', function (geojson) {
 			L.geoJson(geojson, { 
@@ -37,16 +37,65 @@
 			}).addTo(map);
 		});
 
-		var baseLayers = {
-		    'Yandex': L.tileLayer('http://vec0{s}.maps.yandex.net/tiles?l=map&x={x}&y={ym}&z={z}', { subdomains: '01234', ym: function (data) { return data.y + 3; }}),
-		    'Yandex-Satelite': L.tileLayer('http://sat0{s}.maps.yandex.net/tiles?l=sat&x={x}&y={ym}&z={z}', { subdomains: '01234', ym: function (data) { return data.y + 3; }}),
-		    'OpenStreetMap': L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
-		    'Google': L.tileLayer('http://mts{s}.google.com/vt/hl=ru&x={x}&y={y}&z={z}', { subdomains: '0123'})
+		var googleOptions = {
+			subdomains: '0123'
 		};
 
-		for (var i = 117; i <= 136; i++) {
-			baseLayers['Google-Satelite-v'+i] = L.tileLayer('http://khms{s}.google.ru/kh/v={version}&x={x}&y={y}&z={z}', { subdomains: '0123', version: i});
+		var yandexOptions = {
+			subdomains: '01234'
 		}
+
+		var bingOptions = {
+			subdomains: '01234567',
+			quadkey: function (data) {
+				var quadKey = '';
+	            for (var i = data.z; i > 0; i--) {
+	                var digit = 0;
+	                var mask = 1 << (i - 1);
+	                if ((data.x & mask) != 0) {
+	                    digit++;
+	                }
+	                if ((data.y & mask) != 0) {
+	                    digit++;
+	                    digit++;
+	                }
+	                quadKey += digit;
+	            }
+	            return quadKey;
+			}
+		}
+
+		var baseLayers = {
+		    // 'Yandex': L.tileLayer('http://vec0{s}.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}', yandexOptions),
+		    // 'Yandex Satelite': L.tileLayer('http://sat0{s}.maps.yandex.net/tiles?l=sat&x={x}&y={y}&z={z}', yandexOptions),
+
+		    'OpenStreetMap': L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+
+		    'Google': L.tileLayer('http://mts{s}.google.com/vt/hl=ru&x={x}&y={y}&z={z}', googleOptions),
+			'Google Satelite v130': L.tileLayer('http://khms{s}.google.ru/kh/v=130&x={x}&y={y}&z={z}', googleOptions),
+			'Google Satelite v136': L.tileLayer('http://khms{s}.google.ru/kh/v=136&x={x}&y={y}&z={z}', googleOptions),
+
+			'2GIS': L.tileLayer('http://tile{s}.maps.2gis.com/tiles?x={x}&y={y}&z={z}', googleOptions),
+
+			'Bing': L.tileLayer('http://ak.dynamic.t{s}.tiles.virtualearth.net/comp/ch/{quadkey}?it=G,VE,BX,L,LA&shading=hill&og=23&n=z', bingOptions),
+			'Bing Imagery': L.tileLayer('http://ak.dynamic.t{s}.tiles.virtualearth.net/comp/ch/{quadkey}?mkt=en-us&it=A,G,L&shading=hill&og=23&n=z',bingOptions),
+			'Bing Bird\'s Eye': L.tileLayer('http://ak.t{s}.tiles.virtualearth.net/tiles/cmd/svhybrid?a={quadkey}&g=0', bingOptions),
+
+			'ESRI_Imagery_World_2D': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/ESRI_Imagery_World_2D/MapServer/tile/{z}/{y}/{x}'),
+			'ESRI_StreetMap_World_2D': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer/tile/{z}/{y}/{x}'),
+			'I3_Imagery_Prime_World': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/I3_Imagery_Prime_World/MapServer/tile/{z}/{y}/{x}'),
+			'NASA_CloudCover_World': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/NASA_CloudCover_World/MapServer/tile/{z}/{y}/{x}'),
+			'NatGeo_World_Map': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}'),
+			'NGS_Topo_US_2D': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/NGS_Topo_US_2D/MapServer/tile/{z}/{y}/{x}'),
+			'Ocean_Basemap': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}'),
+			'USA_Topo_Maps': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer/tile/{z}/{y}/{x}'),
+			'World_Imagery': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'),
+			'World_Physical_Map': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}'),
+			'World_Shaded_Relief': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}'),
+			'World_Street_Map': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}'),
+			'World_Terrain_Base': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}'),
+			'World_Topo_Map': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'),
+		};
 
 		var overlays = {
 		};

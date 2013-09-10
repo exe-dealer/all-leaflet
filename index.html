@@ -22,11 +22,12 @@
 	<div class="map"></div>
 
 	<script type="text/javascript">
+
+		L.yandexTileLayer
+
 		var map = L.map(document.querySelector(".map"));
 
 		map.setView([43.260535, 76.945493], 12);
-
-		L.tileLayer('http://vec01.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}').addTo(map);
 
 		$.getJSON('water.geojson', function (geojson) {
 			L.geoJson(geojson, { 
@@ -35,6 +36,22 @@
 			    }
 			}).addTo(map);
 		});
+
+		var baseLayers = {
+		    'Yandex': L.tileLayer('http://vec0{s}.maps.yandex.net/tiles?l=map&x={x}&y={ym}&z={z}', { subdomains: '01234', ym: function (data) { return data.y + 3; }}),
+		    'Yandex-Satelite': L.tileLayer('http://sat0{s}.maps.yandex.net/tiles?l=sat&x={x}&y={ym}&z={z}', { subdomains: '01234', ym: function (data) { return data.y + 3; }}),
+		    'OpenStreetMap': L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+		    'Google': L.tileLayer('http://mts{s}.google.com/vt/hl=ru&x={x}&y={y}&z={z}', { subdomains: '0123'})
+		};
+
+		for (var i = 117; i <= 136; i++) {
+			baseLayers['Google-Satelite-v'+i] = L.tileLayer('http://khms{s}.google.ru/kh/v={version}&x={x}&y={y}&z={z}', { subdomains: '0123', version: i});
+		}
+
+		var overlays = {
+		};
+
+		L.control.layers(baseLayers, overlays).addTo(map);
 	</script>
 </body>
 </html>

@@ -24,7 +24,6 @@
 
 	<script type="text/javascript">
 
-
 		var map = L.map(document.querySelector(".map"));
 
 		map.setView([43.260535, 76.945493], 12); // almaty
@@ -49,19 +48,19 @@
 			subdomains: '01234567',
 			quadkey: function (data) {
 				var quadKey = '';
-	            for (var i = data.z; i > 0; i--) {
-	                var digit = 0;
-	                var mask = 1 << (i - 1);
-	                if ((data.x & mask) != 0) {
-	                    digit++;
-	                }
-	                if ((data.y & mask) != 0) {
-	                    digit++;
-	                    digit++;
-	                }
-	                quadKey += digit;
-	            }
-	            return quadKey;
+				for (var i = data.z; i > 0; i--) {
+					var digit = 0;
+					var mask = 1 << (i - 1);
+					if ((data.x & mask) != 0) {
+						digit++;
+					}
+					if ((data.y & mask) != 0) {
+						digit++;
+						digit++;
+					}
+					quadKey += digit;
+				}
+				return quadKey;
 			}
 		}
 

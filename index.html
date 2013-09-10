@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		html, body {
+			margin: 0;
+			padding: 0;
+			width: 100%;
+			height: 100%;
+		}
+		.map {
+			height: 100%;
+			width: 100%;
+		}
+	</style>
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet-src.js"></script>
+	<script src="http://code.jquery.com/jquery-2.0.3.js"></script>
+</head>
+<body>
+	<div class="map"></div>
+
+	<script type="text/javascript">
+		var map = L.map(document.querySelector(".map"));
+
+		map.setView([43.260535, 76.945493], 12);
+
+		L.tileLayer('http://vec01.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}').addTo(map);
+
+		$.getJSON('water.geojson', function (geojson) {
+			L.geoJson(geojson, { 
+				onEachFeature: function (feature, layer) {
+			        layer.bindPopup(feature.properties.name);
+			    }
+			}).addTo(map);
+		});
+	</script>
+</body>
+</html>

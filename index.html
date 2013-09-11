@@ -14,8 +14,11 @@
 			width: 100%;
 		}
 	</style>
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
-	<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet-src.js"></script>
+	<!-- <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+	<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet-src.js"></script> -->
+	<link rel="stylesheet" href="leaflet.css" />
+	<script src="leaflet-src.js"></script>
+
 	<script src="http://code.jquery.com/jquery-2.0.3.js"></script>
 	<script src="http://api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU" type="text/javascript"></script>
 </head>
@@ -41,7 +44,8 @@
 		};
 
 		var yandexOptions = {
-			subdomains: '01234'
+			subdomains: '01234',
+			crs: L.CRS.EPSG3395
 		}
 
 		var bingOptions = {
@@ -100,6 +104,15 @@
 		};
 
 		L.control.layers(baseLayers, overlays).addTo(map);
+
+		map.on('baselayerchange', function (e) {
+			var center = map.getCenter(),
+				zoom = map.getZoom();
+			map.options.crs = e.layer.options.crs || L.CRS.EPSG3857;
+			map._resetView(center, zoom, false, false);
+		});
+
+		baseLayers['Yandex'].addTo(map);
 	</script>
 </body>
 </html>

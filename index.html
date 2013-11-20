@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	 <meta charset="utf-8" />
 	<title></title>
 	<style type="text/css">
 		html, body {
@@ -20,7 +21,6 @@
 	<script src="leaflet-src.js"></script>
 
 	<script src="http://code.jquery.com/jquery-2.0.3.js"></script>
-	<script src="http://api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU" type="text/javascript"></script>
 </head>
 <body>
 	<div class="map"></div>
@@ -31,6 +31,7 @@
 
 		map.setView([43.260535, 76.945493], 12); // almaty
 
+		/*
 		$.getJSON('water.geojson', function (geojson) {
 			L.geoJson(geojson, { 
 				onEachFeature: function (feature, layer) {
@@ -38,6 +39,17 @@
 			    }
 			}).addTo(map);
 		});
+
+		
+		$.getJSON('shops.geojson', function (geojson) {
+			L.geoJson(geojson, { 
+				onEachFeature: function (feature, layer) {
+			        layer.bindPopup(feature.properties.name + '\n\n' + feature.properties.description);
+			    }
+			}).addTo(map);
+		});
+		*/
+
 
 		var googleOptions = {
 			subdomains: '0123'
@@ -70,6 +82,7 @@
 
 		var baseLayers = {
 			'Yandex': L.tileLayer('http://vec0{s}.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}', yandexOptions),
+			'Яндекс Народная карта': L.tileLayer('http://0{s}.pvec.maps.yandex.net?l=pmap&x={x}&y={y}&z={z}', yandexOptions),
 			'Yandex Satellite': L.tileLayer('http://sat0{s}.maps.yandex.net/tiles?l=sat&x={x}&y={y}&z={z}', yandexOptions),
 
 			'OpenStreetMap': L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
@@ -115,6 +128,49 @@
 		});
 
 		baseLayers['Yandex'].addTo(map);
+
+		/*
+		var userMarker = L.marker(); 
+		function updateUserMarker() {
+			navigator.geolocation.getCurrentPosition(function (pos) {
+				userMarker.setLatLng([pos.coords.latitude, pos.coords.longitude]);
+				userMarker.addTo(map);
+				alert(pos);
+			}, function (e) {
+				alert(e.code);
+			});
+		}
+
+		updateUserMarker();*/
+
+		function pointUrl(latlng) {
+			latlng = L.latLng(latlng);
+			return location.origin + 
+				location.pathname + 
+				'?lat=' + latlng.lat + 
+				'&lng=' + latlng.lng;
+		}
+
+		function addMarker(latlng) {
+			L.marker(latlng)
+				.addTo(map)
+				.bindPopup(pointUrl(latlng))
+				.openPopup();
+		}
+
+
+		map.on('click', function (e) {
+			addMarker(e.latlng);
+		});
+
+		query = location.search;
+		var lat = query.match('lat=(\\d+\\.?\\d*)')[1];
+		var lng = query.match('lng=(\\d+\\.?\\d*)')[1];
+		if (lat && lng) {
+			addMarker([lat, lng]);
+		}
+		
+
 	</script>
 </body>
 </html>

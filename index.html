@@ -1,176 +1,282 @@
 <!DOCTYPE html>
 <html>
 <head>
-	 <meta charset="utf-8" />
-	<title></title>
-	<style type="text/css">
-		html, body {
+  <meta charset="utf-8" />
+  <title>all leaflet</title>
+  <style type="text/css">
+		html, body, #map {
 			margin: 0;
 			padding: 0;
 			width: 100%;
 			height: 100%;
 		}
-		.map {
-			height: 100%;
-			width: 100%;
-		}
-	</style>
-	<!-- <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
-	<script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet-src.js"></script> -->
-	<link rel="stylesheet" href="leaflet.css" />
-	<script src="leaflet-src.js"></script>
-
-	<script src="http://code.jquery.com/jquery-2.0.3.js"></script>
+  </style>
+  <link href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" rel="stylesheet" />
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet-src.js"></script>
 </head>
 <body>
-	<div class="map"></div>
+  <div id="map"></div>
 
-	<script type="text/javascript">
+  <script type="text/javascript">
+    var basemapsConf = [
+      {
+        "name"         : "bing",
+        "tileUrlTmpl"  : "http://ak.dynamic.t{s}.tiles.virtualearth.net/comp/ch/{quadkey}?mkt=ru-ru&it=G,VE,BX,L,LA&shading=hill&og=23&n=z",
+        "isElliptical" : false,
+        "subdomains"   : "01234567",
+        "minZoom"      : 1,
+        "maxZoom"      : 21
+      },
+      {
+        "name"         : "bing bird's eye",
+        "tileUrlTmpl"  : "http://ak.t{s}.tiles.virtualearth.net/tiles/cmd/svhybrid?a={quadkey}&g=0",
+        "isElliptical" : false,
+        "subdomains"   : "01234567",
+        "minZoom"      : 1,
+        "maxZoom"      : 17
+      },
+      {
+        "name"         : "bing imagery",
+        "tileUrlTmpl"  : "http://ak.dynamic.t{s}.tiles.virtualearth.net/comp/ch/{quadkey}?mkt=ru-ru&it=A,G,L&shading=hill&og=23&n=z",
+        "isElliptical" : false,
+        "subdomains"   : "01234567",
+        "minZoom"      : 1,
+        "maxZoom"      : 19
+      },
+      {
+        "name"         : "esri_imagery_world_2d",
+        "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/ESRI_Imagery_World_2D/MapServer/tile/{z}/{y}/{x}",
+        "isElliptical" : false,
+        "subdomains"   : "abc",
+        "minZoom"      : 0,
+        "maxZoom"      : 23
+      },
+      {
+        "name"         : "esri_streetmap_world_2d",
+        "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer/tile/{z}/{y}/{x}",
+        "isElliptical" : false,
+        "subdomains"   : "abc",
+        "minZoom"      : 0,
+        "maxZoom"      : 23
+      },
+      {
+        "name"         : "google",
+        "tileUrlTmpl"  : "http://mts{s}.google.com/vt/hl=ru&x={x}&y={y}&z={z}",
+        "isElliptical" : false,
+        "subdomains"   : "0123",
+        "minZoom"      : 0,
+        "maxZoom"      : 22
+      },
+      {
+        "name"         : "google satellite",
+        "tileUrlTmpl"  : "http://khms{s}.google.ru/kh/v=136&x={x}&y={y}&z={z}",
+        "isElliptical" : false,
+        "subdomains"   : "0123",
+        "minZoom"      : 0,
+        "maxZoom"      : 23
+      },
+      {
+        "name"         : "here.com",
+        "tileUrlTmpl"  : "http://{s}.base.maps.api.here.com/maptile/2.1/maptile/62aaddb349/normal.day…p_id=SqE1xcSngCd3m4a1zEGb&token=r0sR1DzqDkS6sDnh902FWQ&xnlp=CL_JSMv2.5.3.2",
+        "isElliptical" : false,
+        "subdomains"   : "1234",
+        "minZoom"      : 0,
+        "maxZoom"      : 23
+      },
+      {
+        "name"         : "mapbox github",
+        "tileUrlTmpl"  : "https://{s}.tiles.mapbox.com/v3/github.map-xgq2svrz/{z}/{x}/{y}.png",
+        "isElliptical" : false,
+        "subdomains"   : "abc",
+        "minZoom"      : 0,
+        "maxZoom"      : 23
+      },
+      {
+        "name"         : "natgeo_world_map",
+        "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}",
+        "isElliptical" : false,
+        "subdomains"   : "abc",
+        "minZoom"      : 0,
+        "maxZoom"      : 23
+      },
+      {
+        "name"         : "ocean_basemap",
+        "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}",
+        "isElliptical" : false,
+        "subdomains"   : "abc",
+        "minZoom"      : 0,
+        "maxZoom"      : 23
+      },
+      {
+        "name"         : "open street map",
+        "tileUrlTmpl"  : "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "isElliptical" : false,
+        "subdomains"   : "abc",
+        "minZoom"      : 0,
+        "maxZoom"      : 19
+      },
+      {
+        "name"         : "usa_topo_maps",
+        "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer/tile/{z}/{y}/{x}",
+        "isElliptical" : false,
+        "subdomains"   : "abc",
+        "minZoom"      : 0,
+        "maxZoom"      : 23
+      },
+      {
+        "name"         : "world_imagery",
+        "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        "isElliptical" : false,
+        "subdomains"   : "abc",
+        "minZoom"      : 0,
+        "maxZoom"      : 23
+      },
+      {
+        "name"         : "world_physical_map",
+        "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}",
+        "isElliptical" : false,
+        "subdomains"   : "abc",
+        "minZoom"      : 0,
+        "maxZoom"      : 23
+      },
+      {
+        "name"         : "world_shaded_relief",
+        "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}",
+        "isElliptical" : false,
+        "subdomains"   : "abc",
+        "minZoom"      : 0,
+        "maxZoom"      : 23
+      },
+      {
+        "name"         : "world_street_map",
+        "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+        "isElliptical" : false,
+        "subdomains"   : "abc",
+        "minZoom"      : 0,
+        "maxZoom"      : 23
+      },
+      {
+        "name"         : "world_terrain_base",
+        "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}",
+        "isElliptical" : false,
+        "subdomains"   : "abc",
+        "minZoom"      : 0,
+        "maxZoom"      : 23
+      },
+      {
+        "name"         : "world_topo_map",
+        "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+        "isElliptical" : false,
+        "subdomains"   : "abc",
+        "minZoom"      : 0,
+        "maxZoom"      : 23
+      },
+      {
+        "name"         : "2gis",
+        "tileUrlTmpl"  : "http://tile{s}.maps.2gis.com/tiles?x={x}&y={y}&z={z}",
+        "isElliptical" : false,
+        "subdomains"   : "0123",
+        "minZoom"      : 0,
+        "maxZoom"      : 18
+      },
+      {
+        "name"         : "yandex",
+        "tileUrlTmpl"  : "http://vec0{s}.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}",
+        "isElliptical" : true,
+        "subdomains"   : "01234",
+        "minZoom"      : 0,
+        "maxZoom"      : 18
+      },
+      {
+        "name"         : "yandex public map",
+        "tileUrlTmpl"  : "http://0{s}.pvec.maps.yandex.net?l=pmap&x={x}&y={y}&z={z}",
+        "isElliptical" : true,
+        "subdomains"   : "01234",
+        "minZoom"      : 0,
+        "maxZoom"      : 20
+      },
+      {
+        "name"         : "yandex satellite",
+        "tileUrlTmpl"  : "http://sat0{s}.maps.yandex.net/tiles?l=sat&x={x}&y={y}&z={z}",
+        "isElliptical" : true,
+        "subdomains"   : "01234",
+        "minZoom"      : 0,
+        "maxZoom"      : 19
+      }
+    ];
 
-		var map = L.map(document.querySelector(".map"));
 
-		map.setView([43.260535, 76.945493], 12); // almaty
+    var almatyLatLng = L.latLng(43.260535, 76.945493);
 
-		/*
-		$.getJSON('water.geojson', function (geojson) {
-			L.geoJson(geojson, { 
-				onEachFeature: function (feature, layer) {
-			        layer.bindPopup(feature.properties.name);
-			    }
-			}).addTo(map);
-		});
+    var map = L.map('map', {
+      center: almatyLatLng,
+      zoom: 12
+    });
 
-		
-		$.getJSON('shops.geojson', function (geojson) {
-			L.geoJson(geojson, { 
-				onEachFeature: function (feature, layer) {
-			        layer.bindPopup(feature.properties.name + '\n\n' + feature.properties.description);
-			    }
-			}).addTo(map);
-		});
-		*/
+    map.on('baselayerchange', function (e) {
+      var center = map.getCenter();
+      var zoom = map.getZoom();
+      map.options.crs = e.layer.options.isElliptical ? L.CRS.EPSG3395 : L.CRS.EPSG3857;
+      map._resetView(center, zoom, false, false);
+    });
 
+    // http://msdn.microsoft.com/en-us/library/bb259689.aspx
+    function quadkey(zyx) {
+      var result = '';
+      for (var i = zyx.z; i > 0; i--) {
+        var digit = 0;
+        var mask = 1 << (i - 1);
+        if ((zyx.x & mask) != 0) {
+          digit++;
+        }
+        if ((zyx.y & mask) != 0) {
+          digit++;
+          digit++;
+        }
+        result += digit;
+      }
+      return result;
+    }
 
-		var googleOptions = {
-			subdomains: '0123'
-		};
-
-		var yandexOptions = {
-			subdomains: '01234',
-			crs: L.CRS.EPSG3395
-		}
-
-		var bingOptions = {
-			subdomains: '01234567',
-			quadkey: function (data) {
-				var quadKey = '';
-				for (var i = data.z; i > 0; i--) {
-					var digit = 0;
-					var mask = 1 << (i - 1);
-					if ((data.x & mask) != 0) {
-						digit++;
-					}
-					if ((data.y & mask) != 0) {
-						digit++;
-						digit++;
-					}
-					quadKey += digit;
-				}
-				return quadKey;
-			}
-		}
-
-		var baseLayers = {
-			'Yandex': L.tileLayer('http://vec0{s}.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}', yandexOptions),
-			'Яндекс Народная карта': L.tileLayer('http://0{s}.pvec.maps.yandex.net?l=pmap&x={x}&y={y}&z={z}', yandexOptions),
-			'Yandex Satellite': L.tileLayer('http://sat0{s}.maps.yandex.net/tiles?l=sat&x={x}&y={y}&z={z}', yandexOptions),
-
-			'OpenStreetMap': L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
-
-			'Google': L.tileLayer('http://mts{s}.google.com/vt/hl=ru&x={x}&y={y}&z={z}', googleOptions),
-			'Google Satellite v130': L.tileLayer('http://khms{s}.google.ru/kh/v=130&x={x}&y={y}&z={z}', googleOptions),
-			'Google Satellite v136': L.tileLayer('http://khms{s}.google.ru/kh/v=136&x={x}&y={y}&z={z}', googleOptions),
-
-			'2GIS': L.tileLayer('http://tile{s}.maps.2gis.com/tiles?x={x}&y={y}&z={z}', googleOptions),
-
-			'Bing': L.tileLayer('http://ak.dynamic.t{s}.tiles.virtualearth.net/comp/ch/{quadkey}?it=G,VE,BX,L,LA&shading=hill&og=23&n=z', bingOptions),
-			'Bing Imagery': L.tileLayer('http://ak.dynamic.t{s}.tiles.virtualearth.net/comp/ch/{quadkey}?mkt=en-us&it=A,G,L&shading=hill&og=23&n=z',bingOptions),
-			'Bing Bird\'s Eye': L.tileLayer('http://ak.t{s}.tiles.virtualearth.net/tiles/cmd/svhybrid?a={quadkey}&g=0', bingOptions),
-
-			'Mapbox Github': L.tileLayer('https://{s}.tiles.mapbox.com/v3/github.map-xgq2svrz/{z}/{x}/{y}.png'),
-
-			'ESRI_Imagery_World_2D': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/ESRI_Imagery_World_2D/MapServer/tile/{z}/{y}/{x}'),
-			'ESRI_StreetMap_World_2D': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer/tile/{z}/{y}/{x}'),
-			'I3_Imagery_Prime_World': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/I3_Imagery_Prime_World/MapServer/tile/{z}/{y}/{x}'),
-			'NASA_CloudCover_World': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/NASA_CloudCover_World/MapServer/tile/{z}/{y}/{x}'),
-			'NatGeo_World_Map': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}'),
-			'NGS_Topo_US_2D': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/NGS_Topo_US_2D/MapServer/tile/{z}/{y}/{x}'),
-			'Ocean_Basemap': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}'),
-			'USA_Topo_Maps': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer/tile/{z}/{y}/{x}'),
-			'World_Imagery': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'),
-			'World_Physical_Map': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}'),
-			'World_Shaded_Relief': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}'),
-			'World_Street_Map': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}'),
-			'World_Terrain_Base': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}'),
-			'World_Topo_Map': L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}'),
-		};
-
-		var overlays = {
-		};
-
-		L.control.layers(baseLayers, overlays).addTo(map);
-
-		map.on('baselayerchange', function (e) {
-			var center = map.getCenter(),
-				zoom = map.getZoom();
-			map.options.crs = e.layer.options.crs || L.CRS.EPSG3857;
-			map._resetView(center, zoom, false, false);
-		});
-
-		baseLayers['Yandex'].addTo(map);
-
-		/*
-		var userMarker = L.marker(); 
-		function updateUserMarker() {
-			navigator.geolocation.getCurrentPosition(function (pos) {
-				userMarker.setLatLng([pos.coords.latitude, pos.coords.longitude]);
-				userMarker.addTo(map);
-				alert(pos);
-			}, function (e) {
-				alert(e.code);
-			});
-		}
-
-		updateUserMarker();*/
-
-		function pointUrl(latlng) {
-			latlng = L.latLng(latlng);
-			return location.origin + 
-				location.pathname + 
-				'?lat=' + latlng.lat + 
-				'&lng=' + latlng.lng;
-		}
-
-		function addMarker(latlng) {
-			L.marker(latlng)
-				.addTo(map)
-				.bindPopup(pointUrl(latlng))
-				.openPopup();
-		}
+    var layersCtl = L.control.layers(null, null, {
+      collapsed: false
+    });
+    basemapsConf.forEach(function (conf, i) {
+      var layerOptions = L.Util.extend({ quadkey: quadkey }, conf);
+      var layer = L.tileLayer(conf.tileUrlTmpl, layerOptions);
+      layersCtl.addBaseLayer(layer, conf.name);
+      if (i === 0) {
+        layer.addTo(map);
+      }
+    });
+    layersCtl.addTo(map);
 
 
-		map.on('click', function (e) {
-			addMarker(e.latlng);
-		});
+    function pointUrl(latlng) {
+      return location.origin +
+        location.pathname +
+        '?lat=' + latlng.lat +
+        '&lng=' + latlng.lng;
+    }
 
-		query = location.search;
-		var lat = query.match('lat=(\\d+\\.?\\d*)')[1];
-		var lng = query.match('lng=(\\d+\\.?\\d*)')[1];
-		if (lat && lng) {
-			addMarker([lat, lng]);
-		}
-		
+    map.on('click', function (e) {
+      L.popup()
+        .setContent(pointUrl(e.latlng))
+        .setLatLng(e.latlng)
+        .openOn(map);
+    });
 
-	</script>
+    query = location.search;
+    var latMatch = query.match('lat=(\\d+\\.?\\d*)');
+    var lngMatch = query.match('lng=(\\d+\\.?\\d*)');
+    if (latMatch && lngMatch) {
+      var latlng = L.latLng(latMatch[1], lngMatch[1]);
+      L.marker(latlng)
+        .addTo(map)
+        .bindPopup(pointUrl(latlng))
+        .openPopup();
+    }
+
+  </script>
 </body>
 </html>

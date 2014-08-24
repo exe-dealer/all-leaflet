@@ -16,6 +16,7 @@
 </head>
 <body>
   <div id="map"></div>
+  
 
   <script type="text/javascript">
     var basemapsConf = [
@@ -69,7 +70,7 @@
       },
       {
         "name"         : "google satellite",
-        "tileUrlTmpl"  : "http://khms{s}.google.ru/kh/v=152&x={x}&y={y}&z={z}",
+        "tileUrlTmpl"  : "http://khms{s}.google.ru/kh/v=136&x={x}&y={y}&z={z}",
         "isElliptical" : false,
         "subdomains"   : "0123",
         "minZoom"      : 0,
@@ -199,10 +200,11 @@
 
 
     var almatyLatLng = L.latLng(43.260535, 76.945493);
+    var moscowAltuf = L.latlng(55.89832002666662, 37.586631774902344);
 
     var map = L.map('map', {
-      center: almatyLatLng,
-      zoom: 12
+      center: moscowAltuf,
+      zoom: 14
     });
 
     map.on('baselayerchange', function (e) {

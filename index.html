@@ -10,12 +10,18 @@
       width: 100%;
       height: 100%;
     }
+
+    .sharelink {
+      border: none;
+      border-bottom: 1px solid #ccc;
+      width: 400px;
+    }
   </style>
-  
+
   <link href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" rel="stylesheet" />
   <link href="http://exe-dealer.github.io/leaflet.measure/leaflet.measure/leaflet.measure.css" rel="stylesheet" />
   <link href="http://exe-dealer.github.io/L.GeoSearch/src/css/l.geosearch.css" rel="stylesheet" />
-  
+
   <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet-src.js"></script>
   <script src="http://exe-dealer.github.io/leaflet.measure/leaflet.measure/leaflet.measure.js"></script>
   <script src="http://exe-dealer.github.io/L.GeoSearch/src/js/l.control.geosearch.js"></script>
@@ -24,12 +30,15 @@
 </head>
 <body>
   <div id="map"></div>
-  
+
 
   <script type="text/javascript">
-    var basemapsConf = [
+    var app = {};
+
+    var baselayersConf = [
       {
         "name"         : "bing",
+        "key"          : "bing",
         "tileUrlTmpl"  : "http://ak.dynamic.t{s}.tiles.virtualearth.net/comp/ch/{quadkey}?mkt=ru-ru&it=G,VE,BX,L,LA&shading=hill&og=23&n=z",
         "isElliptical" : false,
         "subdomains"   : "01234567",
@@ -38,6 +47,7 @@
       },
       {
         "name"         : "bing bird's eye",
+        "key"          : "bing_birds_eye",
         "tileUrlTmpl"  : "http://ak.t{s}.tiles.virtualearth.net/tiles/cmd/svhybrid?a={quadkey}&g=0",
         "isElliptical" : false,
         "subdomains"   : "01234567",
@@ -46,6 +56,7 @@
       },
       {
         "name"         : "bing imagery",
+        "key"          : "bing_imagery",
         "tileUrlTmpl"  : "http://ak.dynamic.t{s}.tiles.virtualearth.net/comp/ch/{quadkey}?mkt=ru-ru&it=A,G,L&shading=hill&og=23&n=z",
         "isElliptical" : false,
         "subdomains"   : "01234567",
@@ -54,6 +65,7 @@
       },
       {
         "name"         : "esri_imagery_world_2d",
+        "key"          : "esri_imagery_world_2d",
         "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/ESRI_Imagery_World_2D/MapServer/tile/{z}/{y}/{x}",
         "isElliptical" : false,
         "subdomains"   : "abc",
@@ -62,6 +74,7 @@
       },
       {
         "name"         : "esri_streetmap_world_2d",
+        "key"          : "esri_streetmap_world_2d",
         "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/ESRI_StreetMap_World_2D/MapServer/tile/{z}/{y}/{x}",
         "isElliptical" : false,
         "subdomains"   : "abc",
@@ -70,6 +83,7 @@
       },
       {
         "name"         : "google",
+        "key"          : "google",
         "tileUrlTmpl"  : "http://mts{s}.google.com/vt/hl=ru&x={x}&y={y}&z={z}",
         "isElliptical" : false,
         "subdomains"   : "0123",
@@ -78,6 +92,7 @@
       },
       {
         "name"         : "google satellite",
+        "key"          : "google_satellite",
         "tileUrlTmpl"  : "http://khms{s}.google.ru/kh/v=136&x={x}&y={y}&z={z}",
         "isElliptical" : false,
         "subdomains"   : "0123",
@@ -86,6 +101,7 @@
       },
       {
         "name"         : "mapbox github",
+        "key"          : "mapbox_github",
         "tileUrlTmpl"  : "https://{s}.tiles.mapbox.com/v3/github.map-xgq2svrz/{z}/{x}/{y}.png",
         "isElliptical" : false,
         "subdomains"   : "abc",
@@ -94,6 +110,7 @@
       },
       {
         "name"         : "natgeo_world_map",
+        "key"          : "natgeo_world_map",
         "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}",
         "isElliptical" : false,
         "subdomains"   : "abc",
@@ -102,6 +119,7 @@
       },
       {
         "name"         : "ocean_basemap",
+        "key"          : "ocean_basemap",
         "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}",
         "isElliptical" : false,
         "subdomains"   : "abc",
@@ -110,6 +128,7 @@
       },
       {
         "name"         : "open street map",
+        "key"          : "open_street_map",
         "tileUrlTmpl"  : "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         "isElliptical" : false,
         "subdomains"   : "abc",
@@ -118,6 +137,7 @@
       },
       {
         "name"         : "usa_topo_maps",
+        "key"          : "usa_topo_maps",
         "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer/tile/{z}/{y}/{x}",
         "isElliptical" : false,
         "subdomains"   : "abc",
@@ -126,6 +146,7 @@
       },
       {
         "name"         : "world_imagery",
+        "key"          : "world_imagery",
         "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
         "isElliptical" : false,
         "subdomains"   : "abc",
@@ -134,6 +155,7 @@
       },
       {
         "name"         : "world_physical_map",
+        "key"          : "world_physical_map",
         "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}",
         "isElliptical" : false,
         "subdomains"   : "abc",
@@ -142,6 +164,7 @@
       },
       {
         "name"         : "world_shaded_relief",
+        "key"          : "world_shaded_relief",
         "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}",
         "isElliptical" : false,
         "subdomains"   : "abc",
@@ -150,6 +173,7 @@
       },
       {
         "name"         : "world_street_map",
+        "key"          : "world_street_map",
         "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
         "isElliptical" : false,
         "subdomains"   : "abc",
@@ -158,6 +182,7 @@
       },
       {
         "name"         : "world_terrain_base",
+        "key"          : "world_terrain_base",
         "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}",
         "isElliptical" : false,
         "subdomains"   : "abc",
@@ -166,6 +191,7 @@
       },
       {
         "name"         : "world_topo_map",
+        "key"          : "world_topo_map",
         "tileUrlTmpl"  : "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
         "isElliptical" : false,
         "subdomains"   : "abc",
@@ -174,6 +200,7 @@
       },
       {
         "name"         : "2gis",
+        "key"          : "2gis",
         "tileUrlTmpl"  : "http://tile{s}.maps.2gis.com/tiles?x={x}&y={y}&z={z}",
         "isElliptical" : false,
         "subdomains"   : "0123",
@@ -182,6 +209,7 @@
       },
       {
         "name"         : "yandex",
+        "key"          : "yandex",
         "tileUrlTmpl"  : "http://vec0{s}.maps.yandex.net/tiles?l=map&x={x}&y={y}&z={z}",
         "isElliptical" : true,
         "subdomains"   : "01234",
@@ -190,6 +218,7 @@
       },
       {
         "name"         : "yandex public map",
+        "key"          : "yandex_public_map",
         "tileUrlTmpl"  : "http://0{s}.pvec.maps.yandex.net?l=pmap&x={x}&y={y}&z={z}",
         "isElliptical" : true,
         "subdomains"   : "01234",
@@ -198,6 +227,7 @@
       },
       {
         "name"         : "yandex satellite",
+        "key"          : "yandex_satellite",
         "tileUrlTmpl"  : "http://sat0{s}.maps.yandex.net/tiles?l=sat&x={x}&y={y}&z={z}",
         "isElliptical" : true,
         "subdomains"   : "01234",
@@ -211,9 +241,74 @@
     var moscowAltuf = L.latLng(55.89832002666662, 37.586631774902344);
 
     var map = L.map('map', {
-      measureControl: true,
       center: moscowAltuf,
       zoom: 14
+    });
+
+    app.SharePopup = L.Popup.extend({
+      options: {
+        maxWidth: 500
+      },
+
+      initialize: function () {
+        L.Popup.prototype.initialize.apply(this, arguments);
+
+        var inputEl = document.createElement('input');
+        inputEl.className = 'sharelink';
+        inputEl.readOnly = 'readonly';
+        inputEl.onclick = function () {
+          inputEl.select();
+        }
+
+        this.setContent(inputEl);
+        this._inputEl = inputEl;
+      },
+
+      onAdd: function (map) {
+        L.Popup.prototype.onAdd.apply(this, arguments);
+
+        map.on('baselayerchange', this._onBaselayerChange, this);
+        for (var layerId in map._layers) {
+          var baselayerKey = map._layers[layerId].options.key;
+          if (baselayerKey) {
+            this.setBaselayerKey(baselayerKey);
+            break;
+          }
+        }
+
+        this._inputEl.focus();
+        this._inputEl.select();
+      },
+
+      onRemove: function (map) {
+        L.Popup.prototype.onRemove.apply(this, arguments);
+        map.off('baselayerchange', this._onBaselayerChange, this);
+      },
+
+      _onBaselayerChange: function (e) {
+        this.setBaselayerKey(e.layer.options.key);
+      },
+
+      setBaselayerKey: function (baselayerKey) {
+        this.options.baselayerKey = baselayerKey;
+        this._updateShareUrl();
+      },
+
+      setLatLng: function (latlng) {
+        L.Popup.prototype.setLatLng.apply(this, arguments);
+        this._updateShareUrl();
+        return this;
+      },
+
+      _updateShareUrl: function () {
+        var latlng = this.getLatLng() || {};
+        this._inputEl.value =
+          location.origin +
+          location.pathname +
+          '?lat=' + latlng.lat +
+          '&lng=' + latlng.lng +
+          '&map=' + encodeURIComponent(this.options.baselayerKey);
+      }
     });
 
     map.on('baselayerchange', function (e) {
@@ -222,13 +317,6 @@
       map.options.crs = e.layer.options.isElliptical ? L.CRS.EPSG3395 : L.CRS.EPSG3857;
       map._resetView(center, zoom, false, false);
     });
-    
-    
-    new L.Control.GeoSearch({
-      provider: new L.GeoSearch.Provider.Google(),
-      position: 'topcenter',
-      showMarker: true
-    }).addTo(map);
 
     // http://msdn.microsoft.com/en-us/library/bb259689.aspx
     function quadkey(zyx) {
@@ -248,45 +336,60 @@
       return result;
     }
 
-    var layersCtl = L.control.layers(null, null, {
-      collapsed: false
-    });
-    basemapsConf.forEach(function (conf, i) {
-      var layerOptions = L.Util.extend({ quadkey: quadkey }, conf);
-      var layer = L.tileLayer(conf.tileUrlTmpl, layerOptions);
-      layersCtl.addBaseLayer(layer, conf.name);
-      if (i === 0) {
-        layer.addTo(map);
-      }
-    });
-    layersCtl.addTo(map);
-
-
-    function pointUrl(latlng) {
-      return location.origin +
-        location.pathname +
-        '?lat=' + latlng.lat +
-        '&lng=' + latlng.lng;
-    }
-
-    map.on('click', function (e) {
-      L.popup()
-        .setContent(pointUrl(e.latlng))
-        .setLatLng(e.latlng)
-        .openOn(map);
-    });
-
-    query = location.search;
-    var latMatch = query.match('lat=(\\d+\\.?\\d*)');
-    var lngMatch = query.match('lng=(\\d+\\.?\\d*)');
+    var latMatch = location.search.match(/lat=(\d+\.?\d*)/);
+    var lngMatch = location.search.match(/lng=(\d+\.?\d*)/);
     if (latMatch && lngMatch) {
-      var latlng = L.latLng(latMatch[1], lngMatch[1]);
-      L.marker(latlng)
+      var queriedLatLng = L.latLng(latMatch[1], lngMatch[1]);
+      map.panTo(queriedLatLng, {
+        animate: false
+      });
+      L.marker(queriedLatLng)
         .addTo(map)
-        .bindPopup(pointUrl(latlng))
         .openPopup();
     }
 
+    var basemapsLayers = baselayersConf.map(function (conf) {
+      return L.tileLayer(
+        conf.tileUrlTmpl,
+        L.Util.extend({ quadkey: quadkey }, conf)
+      );
+    });
+
+    var layersCtrl = L.control.layers(null, null, {
+      collapsed: false
+    });
+
+    basemapsLayers.forEach(function (layer) {
+      layersCtrl.addBaseLayer(layer, layer.options.name);
+    });
+
+    layersCtrl.addTo(map);
+
+    var mapMatch = location.search.match(/map=(\w+)/);
+    var desiredBaselayer = (mapMatch && basemapsLayers.filter(function (layer){
+      return layer.options.key === mapMatch[1];
+    })[0]);
+    map.addLayer(desiredBaselayer || basemapsLayers[0]);
+
+
+
+    new L.Control.GeoSearch({
+      provider: new L.GeoSearch.Provider.Google(),
+      position: 'topcenter',
+      showMarker: true
+    }).addTo(map);
+
+
+    var measureCtrl = L.control.measure().addTo(map);
+
+
+    map.on('click', function (e) {
+      if (!measureCtrl._measuring) {
+        new app.SharePopup()
+          .setLatLng(e.latlng)
+          .openOn(map);
+      }
+    });
   </script>
 </body>
 </html>

@@ -18,14 +18,14 @@
     }
   </style>
 
-  <link href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" rel="stylesheet" />
-  <link href="http://exe-dealer.github.io/leaflet.measure/leaflet.measure/leaflet.measure.css" rel="stylesheet" />
-  <link href="http://exe-dealer.github.io/L.GeoSearch/src/css/l.geosearch.css" rel="stylesheet" />
+  <link href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" rel="stylesheet" />
+  <link href="http://cdn.jsdelivr.net/leaflet.geosearch/0.1/css/l.geosearch.css" rel="stylesheet" />
+  <link href="http://jtreml.github.io/leaflet.measure/leaflet.measure/leaflet.measure.css" rel="stylesheet" />
 
-  <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet-src.js"></script>
-  <script src="http://exe-dealer.github.io/leaflet.measure/leaflet.measure/leaflet.measure.js"></script>
-  <script src="http://exe-dealer.github.io/L.GeoSearch/src/js/l.control.geosearch.js"></script>
-  <script src="http://exe-dealer.github.io/L.GeoSearch/src/js/l.geosearch.provider.google.js"></script>
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet-src.js"></script>
+  <script src="http://cdn.jsdelivr.net/leaflet.geosearch/0.1/js/l.control.geosearch.js"></script>
+  <script src="http://cdn.jsdelivr.net/leaflet.geosearch/0.1/js/l.geosearch.provider.google.js"></script>
+  <script src="http://jtreml.github.io/leaflet.measure/leaflet.measure/leaflet.measure.js"></script>
 
 </head>
 <body>
@@ -381,7 +381,10 @@
 
 
     var measureCtrl = L.control.measure().addTo(map);
-
+    measureCtrl._round = function(val) {
+      // kilometers
+      return Math.round((val / 1000) * 10) / 10;
+    };
 
     map.on('click', function (e) {
       if (!measureCtrl._measuring) {

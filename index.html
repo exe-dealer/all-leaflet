@@ -18,11 +18,12 @@
     }
   </style>
 
-  <link href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" rel="stylesheet" />
+
+  <link href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" rel="stylesheet" />
   <link href="http://cdn.jsdelivr.net/leaflet.geosearch/0.1/css/l.geosearch.css" rel="stylesheet" />
   <link href="http://jtreml.github.io/leaflet.measure/leaflet.measure/leaflet.measure.css" rel="stylesheet" />
 
-  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet-src.js"></script>
+  <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
   <script src="http://cdn.jsdelivr.net/leaflet.geosearch/0.1/js/l.control.geosearch.js"></script>
   <script src="http://cdn.jsdelivr.net/leaflet.geosearch/0.1/js/l.geosearch.provider.google.js"></script>
   <script src="http://jtreml.github.io/leaflet.measure/leaflet.measure/leaflet.measure.js"></script>
@@ -355,15 +356,14 @@
       );
     });
 
-    var layersCtrl = L.control.layers(null, null, {
-      collapsed: false
-    });
+    var layersCtrl = L.control
+      .layers(null, null, { collapsed: false })
+      .addTo(map);
 
     basemapsLayers.forEach(function (layer) {
       layersCtrl.addBaseLayer(layer, layer.options.name);
     });
 
-    layersCtrl.addTo(map);
 
     var mapMatch = location.search.match(/map=(\w+)/);
     var desiredBaselayer = (mapMatch && basemapsLayers.filter(function (layer){

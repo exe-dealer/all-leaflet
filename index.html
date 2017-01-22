@@ -19,15 +19,15 @@
   </style>
 
 
-  <link href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" rel="stylesheet" />
-  <link href="http://cdn.jsdelivr.net/leaflet.geosearch/0.1/css/l.geosearch.css" rel="stylesheet" />
-  <link href="http://jtreml.github.io/leaflet.measure/leaflet.measure/leaflet.measure.css" rel="stylesheet" />
-
   <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
+  <link href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" rel="stylesheet" />
+
   <script src="http://cdn.jsdelivr.net/leaflet.geosearch/0.1/js/l.control.geosearch.js"></script>
   <script src="http://cdn.jsdelivr.net/leaflet.geosearch/0.1/js/l.geosearch.provider.google.js"></script>
-  <script src="http://jtreml.github.io/leaflet.measure/leaflet.measure/leaflet.measure.js"></script>
+  <link href="http://cdn.jsdelivr.net/leaflet.geosearch/0.1/css/l.geosearch.css" rel="stylesheet" />
 
+  <script src="https://cdn.rawgit.com/ljagis/leaflet-measure/2.1.1/dist/leaflet-measure.js"></script>
+  <link href="https://cdn.rawgit.com/ljagis/leaflet-measure/2.1.1/dist/leaflet-measure.css" rel="stylesheet" />
 </head>
 <body>
   <div id="map"></div>
@@ -380,11 +380,12 @@
     }).addTo(map);
 
 
-    var measureCtrl = L.control.measure().addTo(map);
-    measureCtrl._round = function(val) {
-      // kilometers
-      return Math.round((val / 1000) * 10) / 10;
-    };
+    var measureCtrl = L.control.measure({
+      activeColor: 'red',
+      completedColor: 'red',
+      primaryLengthUnit: 'kilometeres',
+      primaryAreaUnit: 'hectares'
+    }).addTo(map);
 
     map.on('click', function (e) {
       if (!measureCtrl._measuring) {
